@@ -1,15 +1,32 @@
+import java.awt.datatransfer.StringSelection;
+import java.util.Scanner;
 public class Duke {
+    static void printHello(){
+        System.out.println(" Sup! I'm Air\n" + "How can I help you out today?\n");
+        System.out.println("____________________________________________________________\n");
+    }
     public static void main(String[] args) {
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
+        String input;
+        String logo ="   _____  .__        \n"
+                     +"  /  _  \\ |__|______ \n"
+                     +" /  /_\\  \\|  \\_  __ \\\n"
+                     +"/    |    \\  ||  | \\/\n"
+                     +"\\____|__  /__||__|   \n"
+                     +"        \\/           \n";                ;
         System.out.println("Hello from\n" + logo + "\n");
         System.out.println("____________________________________________________________\n");
-        System.out.println(" Hello! I'm Duke\n" + " What can I do for you?\n");
-        System.out.println("____________________________________________________________\n");
-        System.out.println(" Bye. Hope to see you again soon!\n");
-        System.out.println("____________________________________________________________\n");
+        printHello();
+        Scanner scanner = new Scanner(System.in);
+        while(!(input = scanner.next()).equals("exit"))
+        {
+            System.out.println(input+"\n");
+            System.out.println("____________________________________________________________\n");
+        }
+
+        {
+            System.out.println("Session Ending! Over and Out! \n");
+            System.out.println("____________________________________________________________\n");
+        }
+
     }
 }
