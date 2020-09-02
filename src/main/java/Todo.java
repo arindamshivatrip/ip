@@ -1,14 +1,13 @@
-public class Task {
+public class Todo extends Task {
     protected static int jobCount = 0;
     protected char workType;
     protected String description;
     protected boolean isDone;
 
 
-    public Task(String description) {
-        this.workType = 'T';
-        this.description = description;
-        this.isDone = false;
+    public Todo(String description) {
+        super(description);
+        this.workType='T';
     }
 
     public String getStatusIcon() {
@@ -16,8 +15,4 @@ public class Task {
     }
     public String printDetails(){return "["+this.workType+"]["+this.getStatusIcon()+"]\t"+this.description+"\n";}
 
-    public void markAsDone()
-    {
-        this.isDone=true;
-    }
 }
