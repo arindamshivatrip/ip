@@ -12,5 +12,7 @@ public class Events extends Task {
     public String getStatusIcon() {
         return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
     }
-    public String printDetails(){return "["+this.workType+"]["+this.getStatusIcon()+"]\t"+this.description+"(at:"+this.eventAt+")"+"\n";}
+
+    public String printDetails() {
+        return "[" + this.workType+"][" + this.getStatusIcon()+"]\t" + this.description + "(at:"+this.eventAt+")" + "\n";}
 }
