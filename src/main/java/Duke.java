@@ -28,6 +28,10 @@ public class Duke {
         jobCount++;
         listTasks[jobCount - 1] = userTask;
     }
+    private static void gibberishError() throws NoSuchCommandException{
+        throw new NoSuchCommandException();
+    }
+
 
     public static void main(String[] args) {
         String inputCommand;
@@ -41,8 +45,9 @@ public class Duke {
             if (inputCommand.equals("list")) {
                 printTaskList(jobCount, listTasks);
 //                System.out.println(Task.jobCount);
-            } else if (inputCommand.length() >= 5) {
-                /** Above codition used to prevent code for running for nonsensical commands or for commands where no parameters are defined*/
+            }
+            else if (inputCommand.length() >= 5) {
+                /** Above condition used to prevent code for running for nonsensical commands or for commands where no parameters are defined*/
                 if (inputCommand.contains("done")) {
                     int taskNumber = Integer.parseInt(inputCommand.substring(5, 6));
                     listTasks[taskNumber - 1].markAsDone();
@@ -82,17 +87,19 @@ public class Duke {
                     System.out.println("____________________________________________________________");
                 }
                 else {
-                    System.out.println("____________________________You messed up type again________________________________");
+                    try {
+                        gibberishError();
+                    }
+                    catch(NoSuchCommandException e){
+                        System.out.println("____________________________________________________________\n☹ OOPS!!! I'm sorry, but I don't know what that means :-(\n____________________________________________________________");
+                    }
                 }
             }
             System.out.println("____________________________________________________________");
-
         }
-
         {
             System.out.println("\tSession Ending! Over and Out! \n");
             System.out.println("____________________________________________________________\n");
         }
-
     }
 }
