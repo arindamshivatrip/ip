@@ -1,7 +1,8 @@
 import java.util.Scanner;
-
+import java.util.*;
 public class Duke {
-    private static final Task[] listTasks = new Task[100];
+//    private static final Task[] listTasks = new Task[100];
+    private static final ArrayList<Task> listTasks= new ArrayList<>(1);
     public static int jobCount = 0;
 
     /**
@@ -23,9 +24,9 @@ public class Duke {
     /**
      * Function to print the list of tasks on typing list
      */
-    static void printTaskList(int index, Task[] listTasks) {
+    static void printTaskList(int index) {
         for (int i = 0; i < index; i++) {
-            System.out.println((i + 1) + ".  " + listTasks[i].printDetails());
+            System.out.println((i + 1) + ".  " + listTasks.get(i).printDetails());
         }
     }
 
@@ -35,7 +36,7 @@ public class Duke {
 
     static void newTask(Task userTask) {
         jobCount++;
-        listTasks[jobCount - 1] = userTask;
+        listTasks.add(userTask);
     }
 
     private static void gibberishError() throws NoSuchCommandException {
@@ -47,21 +48,43 @@ public class Duke {
         String inputCommand;
         printHello();
         Scanner scanIn = new Scanner(System.in);
-        int index = 0;
         /** while loop works only till the word bye isn't typed **/
         while (!(inputCommand = scanIn.nextLine()).equals("bye")) {
 //            String inputCommand = scanIn.nextLine();
             String[] splitInputs = inputCommand.split(" ", 2);
             if (inputCommand.equals("list")) {
-                printTaskList(jobCount, listTasks);
+                printTaskList(jobCount);
 //                System.out.println(Task.jobCount);
             } else if (inputCommand.length() >= 4) {
                 /** Above condition used to prevent code for running for nonsensical commands or for commands where no parameters are defined*/
                 if (inputCommand.contains("done")) {
-                    int taskNumber = Integer.parseInt(inputCommand.substring(5, 6));
-                    listTasks[taskNumber - 1].markAsDone();
-                    System.out.println("Noiice! You're done with this Task. Good for you. I've marked that ure done with it.");
-                    System.out.println("\t[" + listTasks[taskNumber - 1].getStatusIcon() + "]\t" + listTasks[taskNumber - 1].description);
+                    try {
+                        int taskNumber = Integer.parseInt(inputCommand.substring(5, 6));
+                        listTasks.get(taskNumber - 1).markAsDone();
+                        System.out.println("Noiice! You're done with this Task. Good for you. I've marked that ure done with it.");
+                        System.out.println("\t[" + listTasks.get(taskNumber - 1).getStatusIcon() + "]\t" + listTasks.get(taskNumber - 1).description);
+                    }
+                    catch (StringIndexOutOfBoundsException e)
+                    {
+                        System.out.println("____________________________________________________________\n" +
+                                "☹ OOPS!!! The description of a " + splitInputs[0] + " cannot be empty.\n" +
+                                "____________________________________________________________\n");
+                    }
+                }
+                if (inputCommand.contains("delete")) {
+                    try {
+                        int taskNumber = Integer.parseInt(splitInputs[1]);
+                        listTasks.remove(taskNumber-1);
+                        jobCount--;
+                        System.out.println("Task has been deleted. Here's the new list");
+                        printTaskList(jobCount);
+                    }
+                    catch (StringIndexOutOfBoundsException e)
+                    {
+                        System.out.println("____________________________________________________________\n" +
+                                "☹ OOPS!!! The description of a " + splitInputs[0] + " cannot be empty.\n" +
+                                "____________________________________________________________\n");
+                    }
                 }
                 /** To add TODO to list */
 
@@ -69,7 +92,7 @@ public class Duke {
                     try {
                         newTask(new Todo(splitInputs[1]));
                         System.out.println("____________________________________________________________");
-                        System.out.println("\tTask added:\t" + listTasks[jobCount - 1].printDetails());
+                        System.out.println("\tTask added:\t" + listTasks.get(jobCount - 1).printDetails());
                         System.out.println("\tNow you have " + jobCount + " tasks in the list.\n");
                         System.out.println("____________________________________________________________");
                     } catch (IndexOutOfBoundsException e) {
@@ -88,7 +111,7 @@ public class Duke {
                         String deadlineBy = attributeFinder[1];
                         newTask(new Deadline(deadlineName, deadlineBy));
                         System.out.println("____________________________________________________________");
-                        System.out.println("\tTask added:\t" + listTasks[jobCount - 1].printDetails());
+                        System.out.println("\tTask added:\t" + listTasks.get(jobCount - 1).printDetails());
                         System.out.println("\tNow you have " + jobCount + " tasks in the list.\n");
                         System.out.println("____________________________________________________________");
                     } catch (IndexOutOfBoundsException e) {
@@ -105,7 +128,7 @@ public class Duke {
                         String eventAt = attributeFinder[1];
                         newTask(new Events(eventName, eventAt));
                         System.out.println("____________________________________________________________");
-                        System.out.println("\tTask added:\t" + listTasks[jobCount - 1].printDetails());
+                        System.out.println("\tTask added:\t" + listTasks.get(jobCount - 1).printDetails());
                         System.out.println("\tNow you have " + jobCount + " tasks in the list.\n");
                         System.out.println("____________________________________________________________");
                     } catch (IndexOutOfBoundsException e) {

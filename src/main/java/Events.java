@@ -15,4 +15,7 @@ public class Events extends Task {
 
     public String printDetails() {
         return "[" + this.workType+"][" + this.getStatusIcon()+"]\t" + this.description + "(at:"+this.eventAt+")" + "\n";}
+    public void markAsDone() {
+        this.isDone = true;
+    }
 }

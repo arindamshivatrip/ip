@@ -16,5 +16,7 @@ public class Deadline extends Task {
     public String printDetails() {
         return "[" + this.workType + "][" + this.getStatusIcon() + "]\t" + this.description + "(by:" + this.completeBy + ")" + "\n";
     }
-
+    public void markAsDone() {
+        this.isDone = true;
+    }
 }

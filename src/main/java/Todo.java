@@ -1,8 +1,8 @@
 public class Todo extends Task {
     protected static int jobCount = 0;
     protected char workType;
-    protected String description;
-    protected boolean isDone;
+//   / protected String description;
+//    protected boolean isDone;
 
 
     public Todo(String description) {
@@ -17,5 +17,7 @@ public class Todo extends Task {
     public String printDetails() {
         return "[" + this.workType + "][" + this.getStatusIcon() + "]\t" + this.description + "\n";
     }
-
+    public void markAsDone() {
+        this.isDone = true;
+    }
 }
