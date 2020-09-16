@@ -8,7 +8,7 @@ public class Task {
     public Task(String description) {
         this.workType = 'T';
         this.description = description;
-        this.isDone = false;
+//        this.isDone = false;
     }
 
     public String getStatusIcon() {

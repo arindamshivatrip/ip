@@ -1,6 +1,6 @@
 public class Deadline extends Task {
     protected String completeBy;
-    protected boolean isDone;
+//    protected boolean isDone;
 
 
     public Deadline(String description, String completeBy) {
@@ -17,6 +17,6 @@ public class Deadline extends Task {
         return "[" + this.workType + "][" + this.getStatusIcon() + "]\t" + this.description + "(by:" + this.completeBy + ")" + "\n";
     }
     public void markAsDone() {
-        this.isDone = true;
+        isDone = true;
     }
 }

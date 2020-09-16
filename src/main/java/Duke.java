@@ -1,5 +1,8 @@
 import java.util.Scanner;
 import java.util.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.File;
 public class Duke {
 //    private static final Task[] listTasks = new Task[100];
     private static final ArrayList<Task> listTasks= new ArrayList<>(1);
@@ -20,7 +23,11 @@ public class Duke {
         System.out.println("\tSup! I'm Air\n" + "\tHow can I help you out today?\n");
         System.out.println("____________________________________________________________\n");
     }
-
+    private static void writeToFile(String filePath, String textToAdd) throws IOException {
+        FileWriter fw = new FileWriter(filePath);
+        fw.write(textToAdd);
+        fw.close();
+    }
     /**
      * Function to print the list of tasks on typing list
      */
@@ -45,6 +52,9 @@ public class Duke {
 
 
     public static void main(String[] args) {
+        Read obj= new Read("./data");
+        listTasks.addAll(obj.importedTasks);
+        jobCount=obj.existingTaskCount;
         String inputCommand;
         printHello();
         Scanner scanIn = new Scanner(System.in);
@@ -151,7 +161,46 @@ public class Duke {
                 }
             }
         }
+
         {
+            String file2="data/duke.txt";
+            String toOut="";
+            try {
+                for(Task i : listTasks)
+                {
+                    System.out.println("gonna do this shit");
+                    char taskType=i.workType;
+                    if(taskType=='T')
+                    {
+                        int isTodoDone = i.isDone ? 1 : 0;
+                        String todoDescription=i.description;
+                        toOut+=taskType+" | "+isTodoDone+" | "+todoDescription+"\n";
+                    }
+                    else if(taskType=='E')
+                    {
+                        int isEventDone = i.isDone ? 1 : 0;
+                        String eventDescription=i.description;
+                        String eventPrint=i.printDetails();
+                        String[] splitEvent = eventPrint.split("at: ");
+                        String[] splitEventTime=splitEvent[1].split("\\)");
+                        toOut+=taskType+" | "+isEventDone+" | "+eventDescription+"| "+splitEventTime[0]+"\n";
+                    }
+                    else if(taskType=='D')
+                    {
+                        int isDeadlineDone = i.isDone ? 1 : 0;
+                        String deadlineDescription=i.description;
+                        String deadlinePrint=i.printDetails();
+                        String[] splitDeadline = deadlinePrint.split("by: ");
+                        String[] splitDeadlineTime=splitDeadline[1].split("\\)");
+                        toOut+=taskType+" | "+isDeadlineDone+" | "+deadlineDescription+"| "+splitDeadlineTime[0]+"\n";
+                    }
+                    System.out.println(toOut);
+                }
+                writeToFile(file2, toOut);
+            }
+            catch (IOException e) {
+                System.out.println("Something went wrong: " + e.getMessage());
+            }
             System.out.println("\tSession Ending! Over and Out! \n");
             System.out.println("____________________________________________________________\n");
         }
