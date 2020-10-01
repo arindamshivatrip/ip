@@ -52,7 +52,26 @@ public class Duke {
                     }
                     break;
                 }
-
+                case "find":
+                {
+                    try
+                    {
+                        String findExp=parser.findExp();
+                        print(findExp);
+                        ArrayList<Task> matchTask= new ArrayList<>(0);
+                        matchTask.addAll(Tasks.taskFinder(findExp));
+                        for(Task i:matchTask)
+                        {
+                            i.printDetails();
+                        }
+                        UI.printMatch(matchTask);
+                    }
+                    catch (NumberFormatException| IndexOutOfBoundsException e)
+                    {
+                        UI.ErrorAck("done");
+                    }
+                    break;
+                }
                 case "delete":
                 {
                     try{
@@ -135,3 +154,4 @@ public class Duke {
         }
     }
 }
+

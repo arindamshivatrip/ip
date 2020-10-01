@@ -19,6 +19,9 @@ public class Parser {
         else if (this.userInput.contains("done")) {
             return "done";
         }
+        else if (this.userInput.contains("find")) {
+            return "find";
+        }
         else if (this.userInput.contains("todo"))
         {
             return "todo";
@@ -42,6 +45,12 @@ public class Parser {
         String[] splitInputs = this.userInput.split(" ", 2);
         int taskNumber = Integer.parseInt(splitInputs[1]);
         return taskNumber;
+    }
+    public  String findExp()
+    {
+        String[] splitInputs = this.userInput.split(" ", 2);
+        String findExpression = splitInputs[1];
+        return findExpression;
     }
     public String todoDesc()
     {

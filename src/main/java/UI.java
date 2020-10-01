@@ -89,4 +89,24 @@ public class UI {
             print((i + 1) + ".  " + listTasks.get(i).printDetails());
         }
     }
+    public static void printMatch(ArrayList<Task> matchTask){
+        if(matchTask.isEmpty())
+        {
+            try
+            {
+                throw new NoSuchCommandException();
+            }
+            catch(NoSuchCommandException e)
+                {
+                    print("____________________________________________________________\nNo such task exists\n____________________________________________________________");
+                }
+        }
+        else{
+            print("The related tasks are:");
+            for(Task i : matchTask)
+            {
+                print(i.printDetails());
+            }
+        }
+    }
 }

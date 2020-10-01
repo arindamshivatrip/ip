@@ -22,4 +22,17 @@ public class TaskList {
     {
         this.listTasks.get(intTaskDone-1).markAsDone();
     }
+    public ArrayList<Task> taskFinder(String findEx)
+    {
+        ArrayList<Task> matchList= new ArrayList<>(0);
+        for(Task i:this.listTasks)
+        {
+            if(i.description.contains(findEx))
+            {
+                matchList.add(i);
+            }
+        }
+        return matchList;
+
+    }
 }
