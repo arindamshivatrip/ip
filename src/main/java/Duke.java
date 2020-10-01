@@ -1,208 +1,136 @@
 import java.util.Scanner;
 import java.util.*;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.File;
 public class Duke {
-//    private static final Task[] listTasks = new Task[100];
-    private static final ArrayList<Task> listTasks= new ArrayList<>(1);
-    public static int jobCount = 0;
 
-    /**
-     * Function to print Logo and Hello
-     */
-    static void printHello() {
-        String logo = "   _____  .__        \n"
-                + "  /  _  \\ |__|______ \n"
-                + " /  /_\\  \\|  \\_  __ \\\n"
-                + "/    |    \\  ||  | \\/\n"
-                + "\\____|__  /__||__|   \n"
-                + "        \\/           \n";
-        System.out.println("\tHello from\n" + logo + "\n");
-        System.out.println("____________________________________________________________\n");
-        System.out.println("\tSup! I'm Air\n" + "\tHow can I help you out today?\n");
-        System.out.println("____________________________________________________________\n");
-    }
-    private static void writeToFile(String filePath, String textToAdd) throws IOException {
-        FileWriter fw = new FileWriter(filePath);
-        fw.write(textToAdd);
-        fw.close();
-    }
-    /**
-     * Function to print the list of tasks on typing list
-     */
-    static void printTaskList(int index) {
-        for (int i = 0; i < index; i++) {
-            System.out.println((i + 1) + ".  " + listTasks.get(i).printDetails());
+    static private void writeUtil(Storage obj,ArrayList<Task> listTasks)
+    {
+        try {
+            obj.fileWriter(listTasks);
+        }
+        catch(IOException e)
+        {
+            System.out.println("IO ERROR! ");
         }
     }
-
-    /**
-     * Function to create task and add it to the listTasks
-     */
-
-    static void newTask(Task userTask) {
-        jobCount++;
-        listTasks.add(userTask);
+    static void print(String str) {
+        System.out.println(str);
     }
-
-    private static void gibberishError() throws NoSuchCommandException {
-        throw new NoSuchCommandException();
-    }
-
-
-    public static void main(String[] args) {
-        Read obj= new Read("./data");
-        listTasks.addAll(obj.importedTasks);
-        jobCount=obj.existingTaskCount;
+    static public void main(String[] args) {
+        Storage obj= new Storage("./data");
+        TaskList Tasks=new TaskList(obj.importedTasks,obj.existingTaskCount);
         String inputCommand;
-        printHello();
+        UI.helloPrinter();
         Scanner scanIn = new Scanner(System.in);
         /** while loop works only till the word bye isn't typed **/
         while (!(inputCommand = scanIn.nextLine()).equals("bye")) {
-//            String inputCommand = scanIn.nextLine();
-            String[] splitInputs = inputCommand.split(" ", 2);
-            if (inputCommand.equals("list")) {
-                printTaskList(jobCount);
-//                System.out.println(Task.jobCount);
-            } else if (inputCommand.length() >= 4) {
-                /** Above condition used to prevent code for running for nonsensical commands or for commands where no parameters are defined*/
-                if (inputCommand.contains("done")) {
-                    try {
-                        int taskNumber = Integer.parseInt(inputCommand.substring(5, 6));
-                        listTasks.get(taskNumber - 1).markAsDone();
-                        System.out.println("Noiice! You're done with this Task. Good for you. I've marked that ure done with it.");
-                        System.out.println("\t[" + listTasks.get(taskNumber - 1).getStatusIcon() + "]\t" + listTasks.get(taskNumber - 1).description);
+            Parser parser=new Parser(inputCommand);
+            String inputType= parser.inputTypeIdentifier();
+            switch (inputType){
+                case "error":
+                    UI.gibberishError();
+                    break;
+                case "list":
+                {
+                    writeUtil(obj, Tasks.listTasks);
+                    UI.printTaskList(Tasks.listTasks,Tasks.jobCount);
+                    break;
+                }
+                case "done":
+                {
+                    try{
+                        int taskNumber = parser.doneOrDelNum();
+                        Tasks.doneTask(taskNumber);
+                        UI.doneAwk(Tasks.listTasks.get(taskNumber - 1));
+                        print("\t[" + Tasks.listTasks.get(taskNumber - 1).getStatusIcon() + "]\t" + Tasks.listTasks.get(taskNumber - 1).description);
+                        writeUtil(obj, Tasks.listTasks);
+
                     }
-                    catch (StringIndexOutOfBoundsException e)
+                    catch (NumberFormatException| IndexOutOfBoundsException e)
                     {
-                        System.out.println("____________________________________________________________\n" +
-                                "☹ OOPS!!! The description of a " + splitInputs[0] + " cannot be empty.\n" +
-                                "____________________________________________________________\n");
+                        UI.ErrorAck("done");
                     }
+                    break;
                 }
-                if (inputCommand.contains("delete")) {
-                    try {
-                        int taskNumber = Integer.parseInt(splitInputs[1]);
-                        listTasks.remove(taskNumber-1);
-                        jobCount--;
-                        System.out.println("Task has been deleted. Here's the new list");
-                        printTaskList(jobCount);
+                case "delete":
+                {
+                    try{
+                        int taskNumber = parser.doneOrDelNum();
+                        Tasks.delTask(taskNumber);
+                        UI.deleteAwk();
+                        UI.printTaskList(Tasks.listTasks,Tasks.jobCount);
+                        writeUtil(obj, Tasks.listTasks);
                     }
-                    catch (StringIndexOutOfBoundsException e)
+                    catch (NumberFormatException| IndexOutOfBoundsException e)
                     {
-                        System.out.println("____________________________________________________________\n" +
-                                "☹ OOPS!!! The description of a " + splitInputs[0] + " cannot be empty.\n" +
-                                "____________________________________________________________\n");
+                        UI.ErrorAck("delete");
                     }
+                    break;
                 }
-                /** To add TODO to list */
-
-                else if ((inputCommand.contains("todo"))) {
-                    try {
-                        newTask(new Todo(splitInputs[1]));
-                        System.out.println("____________________________________________________________");
-                        System.out.println("\tTask added:\t" + listTasks.get(jobCount - 1).printDetails());
-                        System.out.println("\tNow you have " + jobCount + " tasks in the list.\n");
-                        System.out.println("____________________________________________________________");
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println("____________________________________________________________\n" +
-                                "☹ OOPS!!! The description of a " + splitInputs[0] + " cannot be empty.\n" +
-                                "____________________________________________________________\n");
+                case "todo":
+                {
+                    try
+                    {
+                        String todoDesc=parser.todoDesc();
+                        if(todoDesc.trim().isEmpty())
+                        {
+                            UI.ErrorAck("T");
+                            break;
+                        }
+                        Tasks.addTask(new Todo(todoDesc));
+                        UI.addAck(Tasks.listTasks.get(Tasks.jobCount - 1),Tasks.jobCount);
+                        writeUtil(obj, Tasks.listTasks);
                     }
+                    catch (NumberFormatException| IndexOutOfBoundsException e)
+                    {
+                        UI.ErrorAck("T");
+                    }
+                    break;
                 }
-                /** To add Deadline to list */
-
-                else if ((inputCommand.contains("deadline"))) {
-                    try {
-                        String[] attributeFinder = splitInputs[1].split("/by");
-
-                        String deadlineName = attributeFinder[0];
-                        String deadlineBy = attributeFinder[1];
-                        newTask(new Deadline(deadlineName, deadlineBy));
-                        System.out.println("____________________________________________________________");
-                        System.out.println("\tTask added:\t" + listTasks.get(jobCount - 1).printDetails());
-                        System.out.println("\tNow you have " + jobCount + " tasks in the list.\n");
-                        System.out.println("____________________________________________________________");
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println("____________________________________________________________\n" +
-                                "☹ OOPS!!! The description of a " + splitInputs[0] + " cannot be empty.\n" +
-                                "____________________________________________________________\n");
+                case "event":
+                {
+                    try
+                    {
+                        ArrayList<String> eventAttr = parser.attributesExtractor('E');
+                        if(eventAttr.get(0).trim().isEmpty()|eventAttr.get(1).trim().isEmpty())
+                        {
+                            UI.ErrorAck("E");
+                        }
+                        Tasks.addTask(new Events(eventAttr.get(0),eventAttr.get(1)));
+                        UI.addAck(Tasks.listTasks.get(Tasks.jobCount - 1),Tasks.jobCount);
+                        writeUtil(obj, Tasks.listTasks);
                     }
+                    catch (NumberFormatException| IndexOutOfBoundsException e)
+                    {
+                        UI.ErrorAck("E");
+                    }
+                    break;
                 }
-                /** To add event to list */
-                else if ((inputCommand.contains("event"))) {
-                    try {
-                        String[] attributeFinder = splitInputs[1].split("/at");
-                        String eventName = attributeFinder[0];
-                        String eventAt = attributeFinder[1];
-                        newTask(new Events(eventName, eventAt));
-                        System.out.println("____________________________________________________________");
-                        System.out.println("\tTask added:\t" + listTasks.get(jobCount - 1).printDetails());
-                        System.out.println("\tNow you have " + jobCount + " tasks in the list.\n");
-                        System.out.println("____________________________________________________________");
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println("____________________________________________________________\n" +
-                                "☹ OOPS!!! The description of a " + splitInputs[0] + " cannot be empty.\n" +
-                                "____________________________________________________________\n");
+                case "Deadline":
+                {
+                    try
+                    {
+                        ArrayList<String> deadlineAttr = parser.attributesExtractor('D');
+                        if(deadlineAttr.get(0).trim().isEmpty()|deadlineAttr.get(1).trim().isEmpty())
+                        {
+                            UI.ErrorAck("E");
+                            break;
+                        }
+                        Tasks.addTask(new Events(deadlineAttr.get(0),deadlineAttr.get(1)));
+                        UI.addAck(Tasks.listTasks.get(Tasks.jobCount - 1),Tasks.jobCount);
+                        writeUtil(obj, Tasks.listTasks);
                     }
-                } else {
-                    try {
-                        gibberishError();
-                    } catch (NoSuchCommandException e) {
-                        System.out.println("____________________________________________________________\n☹ OOPS!!! I'm sorry, but I don't know what that means :-(\n____________________________________________________________");
+                    catch (NumberFormatException| IndexOutOfBoundsException e)
+                    {
+                        UI.ErrorAck("E");
                     }
-                }
-            } else if (inputCommand.length() < 4) {
-                try {
-                    gibberishError();
-                } catch (NoSuchCommandException e) {
-                    System.out.println("____________________________________________________________\n☹ OOPS!!! I'm sorry, but I don't know what that means :-(\n____________________________________________________________");
+                    break;
                 }
             }
         }
-
         {
-            String file2="data/duke.txt";
-            String toOut="";
-            try {
-                for(Task i : listTasks)
-                {
-                    System.out.println("gonna do this shit");
-                    char taskType=i.workType;
-                    if(taskType=='T')
-                    {
-                        int isTodoDone = i.isDone ? 1 : 0;
-                        String todoDescription=i.description;
-                        toOut+=taskType+" | "+isTodoDone+" | "+todoDescription+"\n";
-                    }
-                    else if(taskType=='E')
-                    {
-                        int isEventDone = i.isDone ? 1 : 0;
-                        String eventDescription=i.description;
-                        String eventPrint=i.printDetails();
-                        String[] splitEvent = eventPrint.split("at: ");
-                        String[] splitEventTime=splitEvent[1].split("\\)");
-                        toOut+=taskType+" | "+isEventDone+" | "+eventDescription+"| "+splitEventTime[0]+"\n";
-                    }
-                    else if(taskType=='D')
-                    {
-                        int isDeadlineDone = i.isDone ? 1 : 0;
-                        String deadlineDescription=i.description;
-                        String deadlinePrint=i.printDetails();
-                        String[] splitDeadline = deadlinePrint.split("by: ");
-                        String[] splitDeadlineTime=splitDeadline[1].split("\\)");
-                        toOut+=taskType+" | "+isDeadlineDone+" | "+deadlineDescription+"| "+splitDeadlineTime[0]+"\n";
-                    }
-                    System.out.println(toOut);
-                }
-                writeToFile(file2, toOut);
-            }
-            catch (IOException e) {
-                System.out.println("Something went wrong: " + e.getMessage());
-            }
-            System.out.println("\tSession Ending! Over and Out! \n");
-            System.out.println("____________________________________________________________\n");
+            UI.bye();
+            writeUtil(obj, Tasks.listTasks);
         }
     }
 }
