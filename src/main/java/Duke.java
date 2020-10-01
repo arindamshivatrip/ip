@@ -3,10 +3,10 @@ import java.util.*;
 import java.io.IOException;
 public class Duke {
 
-    static private void writeUtil(Storage obj,ArrayList<Task> listTasks)
+    static private void writeUtil(Storage store,ArrayList<Task> listTasks)
     {
         try {
-            obj.fileWriter(listTasks);
+            store.fileWriter(listTasks);
         }
         catch(IOException e)
         {
@@ -17,8 +17,8 @@ public class Duke {
         System.out.println(str);
     }
     static public void main(String[] args) {
-        Storage obj= new Storage("./data");
-        TaskList Tasks=new TaskList(obj.importedTasks,obj.existingTaskCount);
+        Storage store= new Storage("./data");
+        TaskList Tasks=new TaskList(store.importedTasks,store.existingTaskCount);
         String inputCommand;
         UI.helloPrinter();
         Scanner scanIn = new Scanner(System.in);
@@ -32,7 +32,7 @@ public class Duke {
                     break;
                 case "list":
                 {
-                    writeUtil(obj, Tasks.listTasks);
+                    writeUtil(store, Tasks.listTasks);
                     UI.printTaskList(Tasks.listTasks,Tasks.jobCount);
                     break;
                 }
@@ -41,9 +41,9 @@ public class Duke {
                     try{
                         int taskNumber = parser.doneOrDelNum();
                         Tasks.doneTask(taskNumber);
-                        UI.doneAwk(Tasks.listTasks.get(taskNumber - 1));
+                        UI.doneAck(Tasks.listTasks.get(taskNumber - 1));
                         print("\t[" + Tasks.listTasks.get(taskNumber - 1).getStatusIcon() + "]\t" + Tasks.listTasks.get(taskNumber - 1).description);
-                        writeUtil(obj, Tasks.listTasks);
+                        writeUtil(store, Tasks.listTasks);
 
                     }
                     catch (NumberFormatException| IndexOutOfBoundsException e)
@@ -52,14 +52,15 @@ public class Duke {
                     }
                     break;
                 }
+
                 case "delete":
                 {
                     try{
                         int taskNumber = parser.doneOrDelNum();
                         Tasks.delTask(taskNumber);
-                        UI.deleteAwk();
+                        UI.deleteAck();
                         UI.printTaskList(Tasks.listTasks,Tasks.jobCount);
-                        writeUtil(obj, Tasks.listTasks);
+                        writeUtil(store, Tasks.listTasks);
                     }
                     catch (NumberFormatException| IndexOutOfBoundsException e)
                     {
@@ -79,7 +80,7 @@ public class Duke {
                         }
                         Tasks.addTask(new Todo(todoDesc));
                         UI.addAck(Tasks.listTasks.get(Tasks.jobCount - 1),Tasks.jobCount);
-                        writeUtil(obj, Tasks.listTasks);
+                        writeUtil(store, Tasks.listTasks);
                     }
                     catch (NumberFormatException| IndexOutOfBoundsException e)
                     {
@@ -98,7 +99,7 @@ public class Duke {
                         }
                         Tasks.addTask(new Events(eventAttr.get(0),eventAttr.get(1)));
                         UI.addAck(Tasks.listTasks.get(Tasks.jobCount - 1),Tasks.jobCount);
-                        writeUtil(obj, Tasks.listTasks);
+                        writeUtil(store, Tasks.listTasks);
                     }
                     catch (NumberFormatException| IndexOutOfBoundsException e)
                     {
@@ -118,7 +119,7 @@ public class Duke {
                         }
                         Tasks.addTask(new Events(deadlineAttr.get(0),deadlineAttr.get(1)));
                         UI.addAck(Tasks.listTasks.get(Tasks.jobCount - 1),Tasks.jobCount);
-                        writeUtil(obj, Tasks.listTasks);
+                        writeUtil(store, Tasks.listTasks);
                     }
                     catch (NumberFormatException| IndexOutOfBoundsException e)
                     {
@@ -130,7 +131,7 @@ public class Duke {
         }
         {
             UI.bye();
-            writeUtil(obj, Tasks.listTasks);
+            writeUtil(store, Tasks.listTasks);
         }
     }
 }

@@ -27,11 +27,11 @@ public class UI {
         print("\tSup! I'm Air\n" + "\tHow can I help you out today?\n");
         print("____________________________________________________________\n");
     }
-    public static void doneAwk(Task task) {
+    public static void doneAck(Task task) {
         print("Noiice! You're done with this Task. Good for you. I've marked that ure done with it.");
         print("\t[" + task.getStatusIcon() + "]\t" + task.description);
     }
-    public static void deleteAwk() {
+    public static void deleteAck() {
         print("Task has been deleted. Here's the new list");
     }
     public static void addAck(Task task,int jobCount) {
