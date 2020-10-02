@@ -3,10 +3,12 @@ import java.util.*;
 import java.io.IOException;
 
 public class Duke {
-
+    /**
+     * A utility function that writes to the txt file when the program makes any changes to the listTasks ArrayList.
+     */
     static private void writeUtil(Storage store, ArrayList<Task> listTasks) {
         try {
-            store.fileWriter(listTasks);
+            store.taskConverter(listTasks);
         } catch (IOException exception) {
             System.out.println("IO ERROR! ");
         }
@@ -15,14 +17,16 @@ public class Duke {
     static void print(String str) {
         System.out.println(str);
     }
-
+    /**
+     * The main of the whole program which connects the various java classes in this program.
+     */
     static public void main(String[] args) {
         Storage store = new Storage("./data");
         TaskList Tasks = new TaskList(store.importedTasks, store.existingTaskCount);
         String inputCommand;
         UI.helloPrinter();
         Scanner scanIn = new Scanner(System.in);
-        /** while loop works only till the word bye isn't typed **/
+        //This code block repeats until the word bye is typed
         while (!(inputCommand = scanIn.nextLine()).equals("bye")) {
             Parser parser = new Parser(inputCommand);
             String inputType = parser.inputTypeIdentifier();
@@ -31,7 +35,7 @@ public class Duke {
                     UI.gibberishError();
                     break;
                 case "list": {
-                    writeUtil(store, Tasks.listTasks);
+                     writeUtil(store, Tasks.listTasks);
                     UI.printTaskList(Tasks.listTasks, Tasks.jobCount);
                     break;
                 }
@@ -117,6 +121,7 @@ public class Duke {
                 }
             }
         }
+        //The case where the user types the word bye
         {
             UI.byeMessage();
             writeUtil(store, Tasks.listTasks);
