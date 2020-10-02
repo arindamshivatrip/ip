@@ -6,7 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+/**
+ * A java class where all the read/write functions are executed.
+ */
 public class Storage {
     public ArrayList<Task> importedTasks = new ArrayList<>(1);
     protected String pathName = "./data";
@@ -23,13 +25,17 @@ public class Storage {
         }
 
     }
-
+    /**
+     * A function that writes to the file at filePath location
+     */
     private static void writeToFile(String filePath, String textToAdd) throws IOException {
         FileWriter fw = new FileWriter(filePath);
         fw.write(textToAdd);
         fw.close();
     }
-
+    /**
+     * A  function that deals with the possibility that the folder data and/or the file duke.txt may not exist.
+     */
     public void existenceChecker() throws IOException {
         File dirFile = new File(this.pathName);
         if (dirFile.isDirectory()) {
@@ -61,8 +67,10 @@ public class Storage {
         }
 
     }
-
-    public void fileWriter(ArrayList<Task> listTask) throws IOException {
+    /**
+     * A  function that converts the task in the list into a form that can be stored and eventually read.
+     */
+    public void taskConverter(ArrayList<Task> listTask) throws IOException {
         String filePath = this.pathName + "/duke.txt";
         String toOut = "";
         try {
@@ -93,7 +101,9 @@ public class Storage {
             System.out.println("Something went wrong: " + e.getMessage());
         }
     }
-
+    /**
+     * A  function that converts the number in the txt file into a boolean true/false
+     */
     public boolean numToBool(int num) {
         if (num == 1) {
             return true;
@@ -101,7 +111,9 @@ public class Storage {
             return false;
         }
     }
-
+    /**
+     * A  function that extracts the tasks and adds it to the arraylist from the text file
+     */
     public void dataExtractor(File textFile) throws IOException {
         Scanner myReader = new Scanner(textFile);
         while (myReader.hasNextLine()) {
