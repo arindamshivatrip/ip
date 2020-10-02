@@ -6,11 +6,13 @@ public class UI {
     String myName;
 
     public UI() {
-        myName="myName";
+        myName = "myName";
     }
+
     static void print(String str) {
         System.out.println(str);
     }
+
     /**
      * Function to print Logo and Hello
      */
@@ -27,26 +29,31 @@ public class UI {
         print("\tSup! I'm Air\n" + "\tHow can I help you out today?\n");
         print("____________________________________________________________\n");
     }
+
     public static void doneAck(Task task) {
         print("Noiice! You're done with this Task. Good for you. I've marked that ure done with it.");
         print("\t[" + task.getStatusIcon() + "]\t" + task.description);
     }
+
     public static void deleteAck() {
         print("Task has been deleted. Here's the new list");
     }
-    public static void addAck(Task task,int jobCount) {
+
+    public static void addAck(Task task, int jobCount) {
         String taskDescription = task.printDetails();
         print("____________________________________________________________");
         print("\tTask added:\t" + taskDescription);
         print("\tNow you have " + jobCount + " tasks in the list.\n");
         print("____________________________________________________________");
     }
-    public static void bye() {
+
+    public static void byeMessage() {
         print("See you later Alligator!");
         print("Task has been deleted. Here's the new list");
     }
-    public static void ErrorAck(String typeChar){
-        switch (typeChar){
+
+    public static void ErrorAck(String typeChar) {
+        switch (typeChar) {
             case "done":
                 print("____________________________________________________________\n" +
                         "☹ OOPS!!! The description of done cannot be empty and must be an integer. Or this task number does not exist\n" +
@@ -75,36 +82,31 @@ public class UI {
 
         }
     }
-    public static void gibberishError(){
+
+    public static void gibberishError() {
         try {
             throw new NoSuchCommandException();
-        }
-        catch (NoSuchCommandException e)
-        {
+        } catch (NoSuchCommandException e) {
             print("____________________________________________________________\n☹ hi OOPS!!! I'm sorry, but I don't know what that means :-(\n____________________________________________________________");
         }
     }
-    public static void printTaskList(ArrayList<Task> listTasks,int jobCount){
+
+    public static void printTaskList(ArrayList<Task> listTasks, int jobCount) {
         for (int i = 0; i < jobCount; i++) {
             print((i + 1) + ".  " + listTasks.get(i).printDetails());
         }
     }
-    public static void printMatch(ArrayList<Task> matchTask){
-        if(matchTask.isEmpty())
-        {
-            try
-            {
+
+    public static void printMatch(ArrayList<Task> matchTask) {
+        if (matchTask.isEmpty()) {
+            try {
                 throw new NoSuchCommandException();
+            } catch (NoSuchCommandException e) {
+                print("____________________________________________________________\nNo such task exists\n____________________________________________________________");
             }
-            catch(NoSuchCommandException e)
-                {
-                    print("____________________________________________________________\nNo such task exists\n____________________________________________________________");
-                }
-        }
-        else{
+        } else {
             print("The related tasks are:");
-            for(Task i : matchTask)
-            {
+            for (Task i : matchTask) {
                 print(i.printDetails());
             }
         }

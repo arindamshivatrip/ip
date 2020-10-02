@@ -1,9 +1,10 @@
 public class Task {
+    static final String TICK = "\u2713";
+    static final String CROSS = "\u2718";
     protected static int jobCount = 0;
     protected char workType;
     protected String description;
     protected boolean isDone;
-
 
     public Task(String description) {
         this.workType = 'T';
@@ -12,7 +13,7 @@ public class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
+        return (isDone ? TICK : CROSS); //return tick or X symbols
     }
 
     public String printDetails() {

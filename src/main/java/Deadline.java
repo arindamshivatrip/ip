@@ -1,7 +1,7 @@
 public class Deadline extends Task {
+    static final String TICK = "\u2713";
+    static final String CROSS = "\u2718";
     protected String completeBy;
-//    protected boolean isDone;
-
 
     public Deadline(String description, String completeBy) {
         super(description);
@@ -10,12 +10,13 @@ public class Deadline extends Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "\u2713" : "\u2718"); //return tick or X symbols
+        return (isDone ? TICK : CROSS); //return tick or X symbols
     }
 
     public String printDetails() {
         return "[" + this.workType + "][" + this.getStatusIcon() + "]\t" + this.description + "(by:" + this.completeBy + ")" + "\n";
     }
+
     public void markAsDone() {
         isDone = true;
     }

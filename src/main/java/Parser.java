@@ -3,84 +3,70 @@ import java.util.ArrayList;
 public class Parser {
     protected String userInput;
     protected Task thisTask;
-    public Parser(String userInput)
-    {
-        this.userInput=userInput;
+
+    public Parser(String userInput) {
+        this.userInput = userInput;
     }
-    public String inputTypeIdentifier()
-    {
+
+    public String inputTypeIdentifier() {
         String[] splitInputs = this.userInput.split(" ", 2);
         if (this.userInput.equals("list")) {
             return "list";
-        }
-        else if (this.userInput.contains("delete")) {
+        } else if (this.userInput.contains("delete")) {
             return "delete";
-        }
-        else if (this.userInput.contains("done")) {
+        } else if (this.userInput.contains("done")) {
             return "done";
-        }
-        else if (this.userInput.contains("find")) {
+        } else if (this.userInput.contains("find")) {
             return "find";
-        }
-        else if (this.userInput.contains("todo"))
-        {
+        } else if (this.userInput.contains("todo")) {
             return "todo";
-        }
-        else if (this.userInput.contains("deadline"))
-        {
+        } else if (this.userInput.contains("deadline")) {
             return "deadline";
-        }
-        else if (this.userInput.contains("event"))
-        {
+        } else if (this.userInput.contains("event")) {
             return "event";
-        }
-        else
-        {
+        } else {
             return "error";
         }
     }
 
-    public  int doneOrDelNum()
-    {
+    public int doneOrDelNum() {
         String[] splitInputs = this.userInput.split(" ", 2);
         int taskNumber = Integer.parseInt(splitInputs[1]);
         return taskNumber;
     }
-    public  String findExp()
-    {
+
+    public String findExp() {
         String[] splitInputs = this.userInput.split(" ", 2);
         String findExpression = splitInputs[1];
         return findExpression;
     }
-    public String todoDesc()
-    {
+
+    public String todoDesc() {
         String[] splitInputs = this.userInput.split(" ", 2);
-        String todoDescription=splitInputs[1];
+        String todoDescription = splitInputs[1];
         return todoDescription;
     }
-    public ArrayList<String> attributesExtractor(char type)
-    {
-        ArrayList<String> eventAttr= new ArrayList<>(1);
+
+    public ArrayList<String> attributesExtractor(char type) {
+        ArrayList<String> eventAttr = new ArrayList<>(1);
         String[] splitInputs = this.userInput.split(" ", 2);
-        switch(type) {
-            case 'E':
-            {
+        switch (type) {
+            case 'E': {
                 String[] attributeFinder = splitInputs[1].split("/at");
                 String eventName = attributeFinder[0];
                 eventAttr.add(eventName);
                 String eventAt = attributeFinder[1];
                 eventAttr.add(eventAt);
             }
-            case 'D':
-            {
-
+            case 'D': {
                 String[] attributeFinder = splitInputs[1].split("/by");
                 String deadlineName = attributeFinder[0];
                 eventAttr.add(deadlineName);
                 String deadlineBy = attributeFinder[1];
                 eventAttr.add(deadlineBy);
             }
-            default:return eventAttr;
+            default:
+                return eventAttr;
         }
     }
 }
