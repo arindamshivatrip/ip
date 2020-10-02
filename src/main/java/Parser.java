@@ -57,6 +57,7 @@ public class Parser {
                 eventAttr.add(eventName);
                 String eventAt = attributeFinder[1];
                 eventAttr.add(eventAt);
+                return eventAttr;
             }
             case 'D': {
                 String[] attributeFinder = splitInputs[1].split("/by");
@@ -64,9 +65,10 @@ public class Parser {
                 eventAttr.add(deadlineName);
                 String deadlineBy = attributeFinder[1];
                 eventAttr.add(deadlineBy);
-            }
-            default:
                 return eventAttr;
+            }
+
         }
+        return eventAttr;
     }
 }

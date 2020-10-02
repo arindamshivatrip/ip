@@ -44,7 +44,6 @@ public class Duke {
                         int taskNumber = parser.doneOrDelNum();
                         Tasks.doneTask(taskNumber);
                         UI.doneAck(Tasks.listTasks.get(taskNumber - 1));
-                        print("\t[" + Tasks.listTasks.get(taskNumber - 1).getStatusIcon() + "]\t" + Tasks.listTasks.get(taskNumber - 1).description);
                         writeUtil(store, Tasks.listTasks);
 
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
@@ -81,6 +80,7 @@ public class Duke {
                         String todoDesc = parser.todoDesc();
                         if (todoDesc.trim().isEmpty()) {
                             UI.ErrorAck("T");
+                            break;
                         }
                         Tasks.addTask(new Todo(todoDesc));
                         UI.addAck(Tasks.listTasks.get(Tasks.jobCount - 1), Tasks.jobCount);
@@ -104,18 +104,18 @@ public class Duke {
                     }
                     break;
                 }
-                case "Deadline": {
+                case "deadline": {
                     try {
                         ArrayList<String> deadlineAttr = parser.attributesExtractor('D');
                         if (deadlineAttr.get(0).trim().isEmpty() | deadlineAttr.get(1).trim().isEmpty()) {
-                            UI.ErrorAck("E");
+                            UI.ErrorAck("D");
                             break;
                         }
-                        Tasks.addTask(new Events(deadlineAttr.get(0), deadlineAttr.get(1)));
+                        Tasks.addTask(new Deadline(deadlineAttr.get(0), deadlineAttr.get(1)));
                         UI.addAck(Tasks.listTasks.get(Tasks.jobCount - 1), Tasks.jobCount);
                         writeUtil(store, Tasks.listTasks);
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                        UI.ErrorAck("E");
+                        UI.ErrorAck("D");
                     }
                     break;
                 }
@@ -124,7 +124,6 @@ public class Duke {
         //The case where the user types the word bye
         {
             UI.byeMessage();
-            writeUtil(store, Tasks.listTasks);
         }
     }
 }
