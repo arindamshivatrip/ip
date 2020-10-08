@@ -109,7 +109,7 @@ ____________________________________________________________
 1.  [E][✘]	project meeting (at: Mon 2-4pm)
 See you later Alligator!
 
-```
+````
 ## Note
 All the commands are case-sensitive. In case you spot errors kindly reach out to me.
 
